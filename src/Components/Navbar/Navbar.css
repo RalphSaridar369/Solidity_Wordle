@@ -1,0 +1,43 @@
+.navbar{
+    height: 10vh;
+    background-color: #A8B0D8;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar__left{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex:1;
+}
+
+.navbar__left a{
+    font-size: 26px;
+    color:white;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
+.navbar__right{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.navbar__right p{
+    font-size: 26px;
+    color:white;
+    text-decoration: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar__left a:hover{
+    cursor: pointer;
+}
+
+.navbar__right{
+    flex:2;
+}
