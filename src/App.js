@@ -41,9 +41,9 @@ function App() {
         const startedGame = await GameContract.methods.startedGame(accounts[0]).call()
         const wordsCount = await GameContract.methods.wordsCount().call()
         const fee = await GameContract.methods.fee().call()
-
-        setStartedGame(startedGame==0?false:true);
-        setStartedGame(wordsCount);
+        console.log(startedGame)
+        setStartedGame(parseInt(startedGame)==0?false:true);
+        setWordsCount(wordsCount);
         setPrice({
           fee:fee
         })
@@ -63,7 +63,7 @@ function App() {
 
   return (
     <div className="App">
-      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, startedGame, setOpenDrawer: (val) => setDrawerOpen(val) }}>
+      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, startedGame, wordsCount, setOpenDrawer: (val) => setDrawerOpen(val), setStartedGame:(val) => setStartedGame(val) }}>
         <Router>
           <Header />
           {Ready && <div className="App__content">
