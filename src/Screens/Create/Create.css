@@ -1,0 +1,25 @@
+.create{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.input__container{
+    display: flex;
+    flex:1;
+    width: 100%;
+    justify-self: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.input{
+    max-width:500px;
+    min-width: 500px;
+    width: 100%;
+    margin: 20px 0!important;
+}
+
+.button{
+    width: 200px;
+}

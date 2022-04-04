@@ -1,60 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import logo from './logo.png';
 import './App.css';
+import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import Navbar from './Components/Navbar/Navbar';
+import { MainContext } from './MainContext';
+import Header from './Components/Header/Header';
+import Drawer from './Components/Drawer/Drawer';
+import Home from './Screens/Home/Home';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+import Help from './Screens/Help/Help';
+import VotingGame from './abis/VotingGame.json';
+import Create from './Screens/Create/Create';
 
-const App = () => {
-  const [account,setAccount] = useState("0x00");
-
-  //Load the web3 aka metamask
-  const loadWeb3 = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. you should consider trying Metamask');
-    }
-  }
-
-  
-  const loadBlockchainData = async()=>{
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    await setAccount(accounts[0])
-    // console.log(accounts);
-
-    const networkId = await web3.eth.net.getId();
-    // console.log(networkId)
-
-    //load contract as folllowing
-    /* const daiTokenData = DaiToken.networks[networkId];
-    if(daiTokenData){
-      const daiToken = new web3.eth.Contract(DaiToken.abi,daiTokenData.address);
-      let daiTokenBalance = await daiToken.methods.balanceOf(accounts[0]).call();
-      console.log("Balance Dai: ",daiTokenBalance)
-      setTokenData({...tokenData,daiToken,daiTokenBalance:daiTokenBalance.toString()});
-    }
-    else{
-      window.alert("DaiToken contract not deployed to detected network");
-    } */
-  }
-
-  const runEffect = async () =>{ 
-    await loadWeb3();
-    await loadBlockchainData();
-  }
+function App() {
+  const [account, setAccount] = useState(); // state variable to set account.
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [contract, setContract] = useState();
+  const [owner, setOwner] = useState();
+  const [Ready, setReady] = useState(false);
+  const [price,setPrice] = useState({
+    bid:0,
+    fee:0
+  }) 
 
   useEffect(() => {
-    runEffect();
-  }, [])
+    async function load() {
+      const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
+      const accounts = await web3.eth.requestAccounts();
+      setAccount(accounts[0]);
+
+      const networkId = await web3.eth.net.getId();
+      const VotingGameData = VotingGame.networks[networkId];
+
+      if (VotingGameData) {
+        const VotingGameContract = new web3.eth.Contract(VotingGame.abi, VotingGameData.address);
+        const owner = await VotingGameContract.methods.owner().call()
+        const fee = await VotingGameContract.methods.fee().call()
+        const bid = await VotingGameContract.methods.bid().call()
+        setPrice({
+          bid:bid,
+          fee:fee
+        })
+        setContract(VotingGameContract);
+        setOwner(owner);
+        setReady(true);
+      }
+      else{
+        alert ("please switch network")
+      }
+    }
+
+    load();
+  }, []);
+
+
+
   return (
-    <div>
-      <Navbar account={account}/>
+    <div className="App">
+      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, setOpenDrawer: (val) => setDrawerOpen(val) }}>
+        <Router>
+          <Header />
+          {Ready && <div className="App__content">
+            <Drawer />
+            <div className="App__content__inner"
+              style={{ marginLeft: drawerOpen ? "290px" : "0px" }}>
+              <Switch>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route path="/help">
+                  <Help />
+                </Route>
+                <Route path="/create">
+                  <Create
+                   />
+                </Route>
+              </Switch>
+            </div>
+          </div>}
+        </Router>
+      </MainContext.Provider>
     </div>
   );
 }

@@ -1,23 +1,24 @@
-require('babel-register');
-require('babel-polyfill');
 
 module.exports = {
   networks: {
     development: {
-      host: "127.0.0.1",
-      port: 7545,
-      network_id: "*" // Match any network id
+     host: "127.0.0.1",     // Localhost (default: none)
+     port: 7545,            // Standard Ethereum port (default: none)
+     network_id: "*",       // Any network (default: none)
     },
+    
   },
-  contracts_directory: './src/contracts/',
   contracts_build_directory: './src/abis/',
   compilers: {
     solc: {
-      version: "0.8.11",   
-      optimizer: {
-        enabled: true,
-        runs: 200
+      version: "0.8.11",    // Fetch exact version from solc-bin (default: truffle's version)
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+       optimizer: {
+         enabled: false,
+         runs: 200
+       },
       }
     }
-  }
-}
+  },
+
+};

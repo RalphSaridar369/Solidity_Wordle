@@ -1,0 +1,35 @@
+.header{
+    background-color: #748b97;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding:0 10px;
+    height: 10vh;
+    width: 100%;
+    position:fixed;
+}
+
+.header__account{
+    display: flex;
+    margin-right: 30px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header__icon:hover{
+    cursor: pointer;
+}
+
+.header__account p{
+    padding-right: 20px;
+    color:white
+}
+
+
+@media only screen and (max-width: 600px) {
+    .header__account__address{
+        display: none;
+    }
+}

@@ -1,0 +1,35 @@
+.drawer {
+    width: 0px;
+    background-color: #748b97;
+    height: 90vh;
+    margin-top: 10vh;
+    transition: width 2s;
+    display: flex;
+    flex-direction: column;
+    padding: 50px 0px;
+    position: fixed!important;
+    align-items: center;
+}
+
+.drawer__content {
+    opacity: 0;
+    transition: opacity 1s;
+    color: white;
+}
+
+.drawer__content__price{
+    margin-bottom: 40px;
+}
+
+.drawer__content__item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+}
+
+.drawer__content__item__header{
+    color: #fff;
+    font-size: 24px;
+}
