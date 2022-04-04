@@ -5,8 +5,7 @@ pragma solidity 0.8.11;
 contract Game {
   
   uint256 public fee;
-  uint256 public wordsCount;
-
+  
   string[] private words;
   
   address public admin;
@@ -24,7 +23,6 @@ contract Game {
 
   constructor() {
     fee = 1 ether;
-    wordsCount=1;
     admin = msg.sender;
   }
 
@@ -50,7 +48,6 @@ contract Game {
   function addWord(string memory _word) public onlyAdmin   {
     require(bytes(_word).length==5,"Word should be size of 5");
     words.push(_word);
-    wordsCount++;
   }
 
   function startGame(uint256 _choice) public payable {
@@ -73,6 +70,10 @@ contract Game {
       games[id-1].livesLeft -= 1;
       return false;
     }
+  }
+
+  function getGameData (uint256 _id) public view returns(Game memory){
+    return games[_id];
   }
 
 }
