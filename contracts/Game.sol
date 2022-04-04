@@ -5,7 +5,8 @@ pragma solidity 0.8.11;
 contract Game {
   
   uint256 public fee;
-  
+  uint256 public wordsCount;
+
   string[] private words;
   
   address public admin;
@@ -23,6 +24,7 @@ contract Game {
 
   constructor() {
     fee = 1 ether;
+    wordsCount=1;
     admin = msg.sender;
   }
 
@@ -37,6 +39,10 @@ contract Game {
     fee = _fee;
   }
 
+  function getBalance() public view returns(uint256){
+    return address(this).balance;
+  }
+
   function getWords() public view onlyAdmin returns(string[] memory){
     return words;
   }
@@ -44,6 +50,7 @@ contract Game {
   function addWord(string memory _word) public onlyAdmin   {
     require(bytes(_word).length==5,"Word should be size of 5");
     words.push(_word);
+    wordsCount++;
   }
 
   function startGame(uint256 _choice) public payable {
@@ -56,14 +63,14 @@ contract Game {
   function checkWord( string memory _word) public returns(bool check){
     uint256 id = startedGame[msg.sender];
     // error in the if statement 
-    if(keccak256(abi.encodePacked((games[id].word))) == keccak256(abi.encodePacked((_word)))){
-      // payable(msg.sender).transfer(fee*2);
-      games[id].won = true;
+    if(keccak256(abi.encodePacked((games[id-1].word))) == keccak256(abi.encodePacked((_word)))){
+      payable(msg.sender).transfer(fee*2);
+      games[id-1].won = true;
       startedGame[msg.sender] = 0;
       return true;
     }
     else{
-      games[id].livesLeft -= 1;
+      games[id-1].livesLeft -= 1;
       return false;
     }
   }

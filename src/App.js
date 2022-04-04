@@ -11,17 +11,18 @@ import {
   Route,
 } from "react-router-dom";
 import Help from './Screens/Help/Help';
-import VotingGame from './abis/VotingGame.json';
+import Game from './abis/Game.json';
 import Create from './Screens/Create/Create';
 
 function App() {
   const [account, setAccount] = useState(); // state variable to set account.
+  const [startedGame, setStartedGame] = useState(false);
+  const [wordsCount, setWordsCount] = useState();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [contract, setContract] = useState();
   const [owner, setOwner] = useState();
   const [Ready, setReady] = useState(false);
   const [price,setPrice] = useState({
-    bid:0,
     fee:0
   }) 
 
@@ -32,18 +33,21 @@ function App() {
       setAccount(accounts[0]);
 
       const networkId = await web3.eth.net.getId();
-      const VotingGameData = VotingGame.networks[networkId];
+      const GameData = Game.networks[networkId];
 
-      if (VotingGameData) {
-        const VotingGameContract = new web3.eth.Contract(VotingGame.abi, VotingGameData.address);
-        const owner = await VotingGameContract.methods.owner().call()
-        const fee = await VotingGameContract.methods.fee().call()
-        const bid = await VotingGameContract.methods.bid().call()
+      if (GameData) {
+        const GameContract = new web3.eth.Contract(Game.abi, GameData.address);
+        const owner = await GameContract.methods.admin().call()
+        const startedGame = await GameContract.methods.startedGame(accounts[0]).call()
+        const wordsCount = await GameContract.methods.wordsCount().call()
+        const fee = await GameContract.methods.fee().call()
+
+        setStartedGame(startedGame==0?false:true);
+        setStartedGame(wordsCount);
         setPrice({
-          bid:bid,
           fee:fee
         })
-        setContract(VotingGameContract);
+        setContract(GameContract);
         setOwner(owner);
         setReady(true);
       }
@@ -59,7 +63,7 @@ function App() {
 
   return (
     <div className="App">
-      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, setOpenDrawer: (val) => setDrawerOpen(val) }}>
+      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, startedGame, setOpenDrawer: (val) => setDrawerOpen(val) }}>
         <Router>
           <Header />
           {Ready && <div className="App__content">
