@@ -14,7 +14,8 @@ const Drawer = () => {
             }}>
             <div className="drawer__content"
             style={{
-                opacity: !drawerOpen?0:1
+                opacity: !drawerOpen?0:1,
+                display: !drawerOpen?'none':'block',
             }}>
                 <div className='drawer__content__price'>
                     <p>Fee: {divideBy(price.fee)} ETH</p>

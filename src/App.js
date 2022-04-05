@@ -17,6 +17,7 @@ import Create from './Screens/Create/Create';
 function App() {
   const [account, setAccount] = useState(); // state variable to set account.
   const [startedGame, setStartedGame] = useState(false);
+  const [startedGameIndex, setStartedGameIndex] = useState();
   const [wordsCount, setWordsCount] = useState();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [contract, setContract] = useState();
@@ -43,6 +44,7 @@ function App() {
         const fee = await GameContract.methods.fee().call()
         console.log(startedGame)
         setStartedGame(parseInt(startedGame)==0?false:true);
+        setStartedGameIndex(startedGame);
         setWordsCount(wordsCount);
         setPrice({
           fee:fee
@@ -63,7 +65,7 @@ function App() {
 
   return (
     <div className="App">
-      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, startedGame, wordsCount, setOpenDrawer: (val) => setDrawerOpen(val), setStartedGame:(val) => setStartedGame(val) }}>
+      <MainContext.Provider value={{ account, drawerOpen, contract, owner, price, startedGame, startedGameIndex, wordsCount, setOpenDrawer: (val) => setDrawerOpen(val), setStartedGame:(val) => setStartedGame(val) }}>
         <Router>
           <Header />
           {Ready && <div className="App__content">

@@ -5,7 +5,8 @@ pragma solidity 0.8.11;
 contract Game {
   
   uint256 public fee;
-  
+  uint256 public wordsCount;
+
   string[] private words;
   
   address public admin;
@@ -47,6 +48,7 @@ contract Game {
 
   function addWord(string memory _word) public onlyAdmin   {
     require(bytes(_word).length==5,"Word should be size of 5");
+    wordsCount++;
     words.push(_word);
   }
 
@@ -57,7 +59,7 @@ contract Game {
     startedGame[msg.sender] = games.length;
   }
 
-  function checkWord( string memory _word) public returns(bool check){
+  function checkWord( string memory _word) public returns(bool){
     uint256 id = startedGame[msg.sender];
     // error in the if statement 
     if(keccak256(abi.encodePacked((games[id-1].word))) == keccak256(abi.encodePacked((_word)))){
