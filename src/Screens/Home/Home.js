@@ -38,8 +38,20 @@ const Home = () => {
       alert("Make sure to insert 5 characters")
     }
     else{
-      let result = await contract.methods.checkWord(word).send({from:account});
-      console.log(result)
+      await contract.methods.checkWord(word).send({from:account});
+      let result = await contract.methods.getGameData(startedGameIndex - 1).call();
+      console.log(result[3])
+      if(!result[3] && data.livesLeft!=1){
+        setData({...data,livesLeft:data.livesLeft-1});
+      }
+      else if(!result[3] && data.livesLeft==1){
+        alert(`You lost, word was: ${data.word}`)
+        setStartedGame(false);
+      }
+      else if(result[3]){
+        alert("You won");
+        setStartedGame(false);
+      }
     }
   }
 
